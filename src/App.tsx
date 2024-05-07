@@ -10,10 +10,13 @@ import { Routes, Route } from 'react-router-dom';
 //import pizzaArray from './assets/pizza.json';
 import React from 'react';
 
-export const SearchContext = React.createContext('');
+export const SearchContext = React.createContext<{
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+}>({ searchValue: '', setSearchValue: () => {} });
 
 function App() {
-  const [searchValue, setSearchValue] = React.useState('');
+  const [searchValue, setSearchValue] = React.useState<string>('');
 
   // console.log(searchValue);
   return (

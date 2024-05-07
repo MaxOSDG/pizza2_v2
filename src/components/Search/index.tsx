@@ -16,6 +16,7 @@ const Search = () => {
     onChangeV(event.target.value);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onChangeV = React.useCallback(
     debounce((str) => {
       console.log(str);

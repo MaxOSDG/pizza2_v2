@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import Search from './Search/index';
 
 function Header() {
-  const { totalPrice, items } = useSelector((state) => state.cart);
+  const { totalPrice, items } = useSelector((state: any) => state.cart);
   return (
     <div className="header">
       <div className="container">
@@ -52,7 +52,7 @@ function Header() {
               />
             </svg>
             <span>
-              {items.reduce((counts, obj) => {
+              {items.reduce((counts: number, obj: { count: number }) => {
                 return obj.count + counts;
               }, 0)}
             </span>

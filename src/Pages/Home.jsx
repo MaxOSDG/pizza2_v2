@@ -7,11 +7,11 @@ import Sort from '../components/sort';
 import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
 import SceletonPizzaBlock from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
-import { SearchContext } from '../App';
+import { SearchContext } from '../App.tsx';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
-import { setItems, fetchPizzas } from '../redux/slices/pizzasSlice';
+import { fetchPizzas } from '../redux/slices/pizzasSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
@@ -37,11 +37,13 @@ const Home = () => {
 
   React.useEffect(() => {
     if (window.location.search) {
+      console.log(window.location.search);
       const params = qs.parse(window.location.search.substring(1));
       const sortProperty = params.sortType;
-      // console.log('ppppp', { ...params });
+      console.log('ppppp', { ...params });
       dispatch(setFilters({ ...params, sortProperty }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPizza = async () => {
@@ -53,6 +55,7 @@ const Home = () => {
 
   React.useEffect(() => {
     fetchPizza();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, sortType, searchValue, pageCount]);
 
   React.useEffect(() => {
@@ -65,6 +68,7 @@ const Home = () => {
 
     navigate(`?${queryString}`);
     // console.log(queryString);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, sortType, searchValue, pageCount]);
 
   return (

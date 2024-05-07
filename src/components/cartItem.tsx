@@ -2,9 +2,18 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { addItems, removeItems, minusItem } from '../redux/slices/cartSlice';
 
-const CartItem = ({ item }) => {
+type CartItemProps = {
+  id: string;
+  imageUrl: string;
+  type: string;
+  title: string;
+  count: number;
+  price: number;
+};
+
+const CartItem: React.FC<CartItemProps> = ({ id, type, imageUrl, title, count, price }) => {
   const dispatch = useDispatch();
-  const id = item.id;
+  // const id = item.id;
   const onClickPlus = () => {
     dispatch(
       addItems({
@@ -25,11 +34,11 @@ const CartItem = ({ item }) => {
     <div className="content__items">
       <div className="cart__item">
         <div className="cart__item-img">
-          <img className="pizza-block__image" src={item.imageUrl} alt="Pizza" />
+          <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
         </div>
         <div className="cart__item-info">
-          <h3>{item.title}</h3>
-          <p>{item.type}, 26 см.</p>
+          <h3>{title}</h3>
+          <p>{type}, 26 см.</p>
         </div>
         <div className="cart__item-count">
           <div
@@ -51,7 +60,7 @@ const CartItem = ({ item }) => {
               />
             </svg>
           </div>
-          <b>{item.count}</b>
+          <b>{count}</b>
           <div
             className="button button--outline button--circle cart__item-count-plus"
             onClick={onClickPlus}>
@@ -73,7 +82,7 @@ const CartItem = ({ item }) => {
           </div>
         </div>
         <div className="cart__item-price">
-          <b>{item.count * item.price} ₽</b>
+          <b>{count * price} ₽</b>
         </div>
         <div className="cart__item-remove" onClick={onClickRemove}>
           <div className="button button--outline button--circle">

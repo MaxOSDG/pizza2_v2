@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearItems } from '../redux/slices/cartSlice';
 import CartItem from '../components/cartItem';
-import CartEmpty from '../components/cartEmpty';
+import CartEmpty from '../components/cartEmpty.tsx';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -90,7 +90,7 @@ const Cart = () => {
         </div>
 
         {items.map((item) => {
-          return <CartItem key={item.id} item={item} />;
+          return <CartItem key={item.id} {...item} />;
         })}
 
         <div className="cart__bottom">
