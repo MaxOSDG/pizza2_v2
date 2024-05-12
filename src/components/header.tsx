@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import Search from './Search/index';
+import { RootState } from '../redux/store';
 
 function Header() {
-  const { totalPrice, items } = useSelector((state: any) => state.cart);
+  const { totalPrice, items } = useSelector((state: RootState) => state.cart);
   return (
     <div className="header">
       <div className="container">

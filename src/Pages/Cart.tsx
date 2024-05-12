@@ -1,14 +1,15 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { clearItems } from '../redux/slices/cartSlice';
 import CartItem from '../components/cartItem';
-import CartEmpty from '../components/cartEmpty.tsx';
+import CartEmpty from '../components/cartEmpty';
+import { RootState, useAppDispatch } from '../redux/store';
 
-const Cart = () => {
-  const dispatch = useDispatch();
-  const { items, totalPrice } = useSelector((state) => state.cart);
+const Cart: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { items, totalPrice } = useSelector((state: RootState) => state.cart);
 
   if (totalPrice === 0) {
     return <CartEmpty />;
@@ -99,7 +100,7 @@ const Cart = () => {
               {' '}
               Всего пицц:{' '}
               <b>
-                {items.reduce((counts, obj) => {
+                {items.reduce((counts: number, obj: { count: number }) => {
                   return obj.count + counts;
                 }, 0)}{' '}
                 шт.

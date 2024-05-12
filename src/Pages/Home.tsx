@@ -7,31 +7,33 @@ import Sort from '../components/sort';
 import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
 import SceletonPizzaBlock from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
-import { SearchContext } from '../App.tsx';
+import { SearchContext } from '../App';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzasSlice';
 import { useNavigate } from 'react-router-dom';
+import { RootState, useAppDispatch } from '../redux/store';
 
-const Home = () => {
+const Home: React.FC = () => {
   // const [pizzaArray, setPizzaArray] = React.useState([]);
-  const [isLoading, setIsLoaing] = React.useState(true);
+  // const [isLoading, setIsLoaing] = React.useState(true);
   const { searchValue } = React.useContext(SearchContext);
 
-  const categoryId = useSelector((state) => state.filter.categoryId);
-  const sortType = useSelector((state) => state.filter.sort.sortProperty);
-  const pageCount = useSelector((state) => state.filter.pageCount);
-  const pizzaArray = useSelector((state) => state.pizzas.items);
+  const categoryId = useSelector((state: RootState) => state.filter.categoryId);
+  const sortType = useSelector((state: RootState) => state.filter.sort.sortProperty);
+  const pageCount = useSelector((state: RootState) => state.filter.pageCount);
+  const pizzaArray = useSelector((state: RootState) => state.pizzas.items);
+  const pizzaLoadStatus = useSelector((state: RootState) => state.pizzas.status);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const onClickCategoryId = (id) => {
+  const onClickCategoryId = React.useCallback((id: number) => {
     dispatch(setCategoryId(id));
-  };
+  }, []);
 
-  const onChangePage = (number) => {
+  const onChangePage = (number: number) => {
     dispatch(setPageCount(number));
   };
 
@@ -39,22 +41,30 @@ const Home = () => {
     if (window.location.search) {
       console.log(window.location.search);
       const params = qs.parse(window.location.search.substring(1));
-      const sortProperty = params.sortType;
-      console.log('ppppp', { ...params });
-      dispatch(setFilters({ ...params, sortProperty }));
+      const sort = {
+        name: '',
+        sortProperty: params.sortType,
+      };
+      delete params.sortType;
+      params.sort = sort;
+
+      dispatch(setFilters({ ...params }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPizza = async () => {
-    setIsLoaing(true);
+    // setIsLoaing(true);
+    // console.log('8888888888888', isLoading);
+    //@ts-ignore
     dispatch(fetchPizzas({ categoryId, sortType, pageCount, searchValue }));
-    setIsLoaing(false);
+    // setIsLoaing(false);
     window.scrollTo(0, 0);
   };
 
   React.useEffect(() => {
     fetchPizza();
+    // console.log(isLoading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, sortType, searchValue, pageCount]);
 
@@ -78,9 +88,9 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      {isLoading && 'Loading'}
+      {pizzaLoadStatus === 'loading' && 'Loading'}
       <div className="content__items">
-        {isLoading ? (
+        {pizzaLoadStatus === 'loading' ? (
           [...new Array(6)].map((_, index) => {
             return <SceletonPizzaBlock key={index} />;
           })

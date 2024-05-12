@@ -1,17 +1,23 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSort } from '../redux/slices/filterSlice';
+import { setSort, SortT } from '../redux/slices/filterSlice';
+import { RootState } from '../redux/store';
+
+type SortItem = {
+  name: string;
+  sortProperty: string;
+};
 
 function Sort() {
   const [isVisiblePopup, setIsVisiblePopup] = React.useState(false);
   const sortRef = React.useRef<HTMLDivElement | null>(null);
 
   const dispatch = useDispatch();
-  const sortId = useSelector((state: any) => state.filter.sort);
+  const sortId = useSelector((state: RootState) => state.filter.sort);
 
   React.useEffect(() => {
     const handleClickOutside = (event: any) => {
-      if (!event.target.offsetParent || !event.target.offsetParent.className.includes('sort')) {
+      if (!event.target.offsetParent || !event.target?.offsetParent.className.includes('sort')) {
         setIsVisiblePopup(false);
       }
     };
@@ -21,18 +27,13 @@ function Sort() {
     };
   }, []);
 
-  type SortItem = {
-    name: string;
-    sortProperty: string;
-  };
-
-  const sortList: SortItem[] = [
+  const sortList: SortT[] = [
     { name: 'популярности', sortProperty: 'rating' },
     { name: 'цене', sortProperty: 'price' },
     { name: 'алфавиту', sortProperty: 'title' },
   ];
 
-  function chooseSort(obj: SortItem) {
+  function chooseSort(obj: SortT) {
     // setIsActiveSort(i);
     setIsVisiblePopup(false);
     dispatch(setSort(obj));
@@ -71,7 +72,7 @@ function Sort() {
                   onClick={() => {
                     chooseSort(obj);
                   }}
-                  className={sortId === i ? 'active' : ''}>
+                  className={sortId.sortProperty === obj.sortProperty ? 'active' : ''}>
                   {obj.name}
                 </li>
               );

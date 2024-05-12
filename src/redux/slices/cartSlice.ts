@@ -1,6 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {
+export type CartItemT = {
+  id: string;
+  imageUrl: string;
+  type: string;
+  title: string;
+  count: number;
+  price: number;
+  size: number;
+};
+
+interface CartSliceState {
+  totalPrice: number;
+  items: CartItemT[];
+}
+
+const initialState: CartSliceState = {
   items: [],
   totalPrice: 0,
 };
@@ -15,7 +30,7 @@ const cartSlice = createSlice({
     //     return obj.price + sum;
     //   }, 0);
     // },
-    addItems(state, action) {
+    addItems(state, action: PayloadAction<CartItemT>) {
       const findItem = state.items.find((obj) => obj.id === action.payload.id);
       //   console.log('+++', findItem);
       if (findItem) {
@@ -27,8 +42,8 @@ const cartSlice = createSlice({
         return obj.price * obj.count + sum;
       }, 0);
     },
-    removeItems(state, action) {
-      if (window.confirm('Точно...?')) {
+    removeItems(state, action: PayloadAction<string>) {
+      if (window.confirm('Уверен...?')) {
         state.items = state.items.filter((obj) => obj.id !== action.payload);
       }
       state.totalPrice = state.items.reduce((sum, obj) => {
@@ -39,17 +54,20 @@ const cartSlice = createSlice({
       state.items = [];
       state.totalPrice = 0;
     },
-    minusItem(state, action) {
-      const findItem = state.items.find((obj) => obj.id === action.payload.id);
-      //   console.log(findItem);
-      if (findItem.count > 0) {
-        findItem.count--;
+    minusItem(state, action: PayloadAction<string>) {
+      const findItem = state.items.find((obj) => obj.id === action.payload);
+      if (findItem) findItem.count--;
+      if (findItem?.count === 0) {
+        state.items = state.items.filter((obj) => obj.id !== action.payload);
       }
+      state.totalPrice = state.items.reduce((sum, obj) => {
+        return obj.price * obj.count + sum;
+      }, 0);
+    },
+    plusItem(state, action: PayloadAction<string>) {
+      const findItem = state.items.find((obj) => obj.id === action.payload);
+      if (findItem) findItem.count--;
 
-      if (findItem.count === 0) {
-        console.log('000000000000000000000000000', state);
-        removeItems(state.id);
-      }
       state.totalPrice = state.items.reduce((sum, obj) => {
         return obj.price * obj.count + sum;
       }, 0);
@@ -57,6 +75,6 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addItems, removeItems, clearItems, minusItem } = cartSlice.actions;
+export const { addItems, removeItems, clearItems, minusItem, plusItem } = cartSlice.actions;
 
 export default cartSlice.reducer;

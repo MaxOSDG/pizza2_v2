@@ -5,13 +5,13 @@ import styles from './search.module.scss';
 
 import { SearchContext } from '../../App';
 
-const Search = () => {
+const Search: React.FC = () => {
   // console.log(searchValue);
   const { searchValue, setSearchValue } = React.useContext(SearchContext);
-  const inputRef = React.useRef();
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [value, setValue] = React.useState('');
 
-  const onChangeInput = (event) => {
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
     onChangeV(event.target.value);
   };
@@ -29,7 +29,10 @@ const Search = () => {
     setValue('');
     setSearchValue('');
     // document.querySelector('input').focus();
-    inputRef.current.focus();
+    // if (inputRef.current) {
+    //   inputRef.current.focus();
+    // }
+    inputRef.current?.focus();
   };
 
   return (

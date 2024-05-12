@@ -1,18 +1,9 @@
 import React from 'react';
 
-type CategoriesProps = { catId: number; onClickCategory: any };
+type CategoriesProps = { catId: number; onClickCategory: (index: number) => void };
 
-const Categories: React.FC<CategoriesProps> = ({ catId, onClickCategory }) => {
-  // console.log('value', catId);
-  // const [activeIndex, setActiveIndex] = React.useState(0);
-
-  // console.log(activeIndex);
-
+const Categories: React.FC<CategoriesProps> = React.memo(({ catId, onClickCategory }) => {
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
-
-  // const onClickCategory = (index) => {
-  //   setActiveIndex(index);
-  // };
 
   return (
     <div className="categories">
@@ -33,6 +24,6 @@ const Categories: React.FC<CategoriesProps> = ({ catId, onClickCategory }) => {
       </ul>
     </div>
   );
-};
+});
 
 export default Categories;
